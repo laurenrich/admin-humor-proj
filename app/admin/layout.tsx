@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { signOut } from "./actions";
+import { requireSuperadminOrRedirect } from "@/lib/auth/requireSuperadmin";
 
 function NavLink({
   href,
@@ -18,7 +19,8 @@ function NavLink({
   );
 }
 
-export default function AdminLayout({ children }: { children: React.ReactNode }) {
+export default async function AdminLayout({ children }: { children: React.ReactNode }) {
+  await requireSuperadminOrRedirect();
   return (
     <div className="min-h-screen bg-zinc-50 text-zinc-900 dark:bg-black dark:text-zinc-50">
       <header className="sticky top-0 z-10 border-b border-zinc-200 bg-white/80 backdrop-blur dark:border-zinc-900 dark:bg-black/70">
