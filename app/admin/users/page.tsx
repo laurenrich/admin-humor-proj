@@ -1,5 +1,6 @@
 import { requireSuperadminOrRedirect } from "@/lib/auth/requireSuperadmin";
 import { createSupabaseAdminClient } from "@/lib/supabase/admin";
+import { type ProfileRow } from "./actions";
 import UsersClient from "./UsersClient";
 
 const PAGE_SIZE = 200;
@@ -33,7 +34,7 @@ export default async function AdminUsersPage() {
         </p>
       </div>
 
-      <UsersClient initialRows={(users ?? []) as any} />
+      <UsersClient initialRows={(users ?? []) as ProfileRow[]} />
     </div>
   );
 }

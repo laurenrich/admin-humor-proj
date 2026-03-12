@@ -54,14 +54,14 @@ export default function ImageEditor({
     if (isPending) return;
     setError(null);
     startTransition(async () => {
-      try {
-        const fd = new FormData();
-        fd.set("id", id);
-        await deleteImage(fd);
-        onDeleted?.();
-      } catch (e) {
-        setError(e instanceof Error ? e.message : "Failed to delete image");
+      const fd = new FormData();
+      fd.set("id", id);
+      const res = await deleteImage(fd);
+      if (!res.ok) {
+        setError(res.error);
+        return;
       }
+      onDeleted?.();
     });
   }
 
@@ -70,20 +70,20 @@ export default function ImageEditor({
     if (isPending) return;
     setError(null);
     startTransition(async () => {
-      try {
-        const fd = new FormData();
-        fd.set("id", id);
-        fd.set("url", url);
-        fd.set("additional_context", additionalContext);
-        fd.set("image_description", imageDescription);
-        fd.set("celebrity_recognition", celebrityRecognition);
-        fd.set("is_public", isPublic ? "true" : "false");
-        fd.set("is_common_use", isCommonUse ? "true" : "false");
-        await updateImage(fd);
-        setEditing(false);
-      } catch (e) {
-        setError(e instanceof Error ? e.message : "Failed to update image");
+      const fd = new FormData();
+      fd.set("id", id);
+      fd.set("url", url);
+      fd.set("additional_context", additionalContext);
+      fd.set("image_description", imageDescription);
+      fd.set("celebrity_recognition", celebrityRecognition);
+      fd.set("is_public", isPublic ? "true" : "false");
+      fd.set("is_common_use", isCommonUse ? "true" : "false");
+      const res = await updateImage(fd);
+      if (!res.ok) {
+        setError(res.error);
+        return;
       }
+      setEditing(false);
     });
   }
 

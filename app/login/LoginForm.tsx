@@ -6,7 +6,6 @@ import { useMemo, useState } from "react";
 
 export default function LoginForm() {
   const searchParams = useSearchParams();
-  const nextPath = searchParams.get("next") ?? "/admin";
   const reason = searchParams.get("reason");
   const queryError = searchParams.get("error");
 

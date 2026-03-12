@@ -1,5 +1,6 @@
 import { requireSuperadminOrRedirect } from "@/lib/auth/requireSuperadmin";
 import { createSupabaseAdminClient } from "@/lib/supabase/admin";
+import { type CaptionRow } from "./actions";
 import CaptionsClient from "./CaptionsClient";
 
 const PAGE_SIZE = 200;
@@ -33,7 +34,7 @@ export default async function AdminCaptionsPage() {
         </p>
       </div>
 
-      <CaptionsClient initialRows={(captions ?? []) as any} />
+      <CaptionsClient initialRows={(captions ?? []) as CaptionRow[]} />
     </div>
   );
 }
