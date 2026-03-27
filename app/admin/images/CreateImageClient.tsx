@@ -40,6 +40,9 @@ export default function CreateImageClient() {
     });
   }
 
+  const field =
+    "rounded-xl border border-zinc-200 bg-white px-3 py-2 text-sm text-zinc-900 outline-none focus:border-zinc-400 dark:border-zinc-800 dark:bg-zinc-950 dark:text-zinc-50";
+
   return (
     <section className="rounded-2xl border border-zinc-200 bg-white p-6 shadow-sm dark:border-zinc-900 dark:bg-zinc-950">
       <h2 className="text-base font-semibold">Create image</h2>
@@ -60,7 +63,7 @@ export default function CreateImageClient() {
           <span className="text-xs font-medium text-zinc-600 dark:text-zinc-400">Or URL</span>
           <input
             name="url"
-            className="h-10 rounded-xl border border-zinc-200 bg-white px-3 text-sm text-zinc-900 outline-none focus:border-zinc-400 dark:border-zinc-800 dark:bg-zinc-950 dark:text-zinc-50"
+            className={field}
             placeholder="https://..."
           />
           <span className="text-[11px] text-zinc-500 dark:text-zinc-400">
@@ -81,35 +84,23 @@ export default function CreateImageClient() {
 
         <label className="flex flex-col gap-1 md:col-span-2">
           <span className="text-xs font-medium text-zinc-600 dark:text-zinc-400">
-            Additional context
-          </span>
-          <textarea
-            name="additional_context"
-            rows={3}
-            className="rounded-xl border border-zinc-200 bg-white px-3 py-2 text-sm text-zinc-900 outline-none focus:border-zinc-400 dark:border-zinc-800 dark:bg-zinc-950 dark:text-zinc-50"
-          />
-        </label>
-
-        <label className="flex flex-col gap-1">
-          <span className="text-xs font-medium text-zinc-600 dark:text-zinc-400">
             Image description
           </span>
-          <textarea
-            name="image_description"
-            rows={3}
-            className="rounded-xl border border-zinc-200 bg-white px-3 py-2 text-sm text-zinc-900 outline-none focus:border-zinc-400 dark:border-zinc-800 dark:bg-zinc-950 dark:text-zinc-50"
-          />
+          <textarea name="image_description" rows={3} className={field} />
         </label>
 
-        <label className="flex flex-col gap-1">
+        <label className="flex flex-col gap-1 md:col-span-2">
+          <span className="text-xs font-medium text-zinc-600 dark:text-zinc-400">
+            Additional context
+          </span>
+          <textarea name="additional_context" rows={3} className={field} />
+        </label>
+
+        <label className="flex flex-col gap-1 md:col-span-2">
           <span className="text-xs font-medium text-zinc-600 dark:text-zinc-400">
             Celebrity recognition
           </span>
-          <textarea
-            name="celebrity_recognition"
-            rows={3}
-            className="rounded-xl border border-zinc-200 bg-white px-3 py-2 text-sm text-zinc-900 outline-none focus:border-zinc-400 dark:border-zinc-800 dark:bg-zinc-950 dark:text-zinc-50"
-          />
+          <textarea name="celebrity_recognition" rows={3} className={field} />
         </label>
 
         <div className="md:col-span-2 flex items-center justify-end">
@@ -130,4 +121,3 @@ export default function CreateImageClient() {
     </section>
   );
 }
-
