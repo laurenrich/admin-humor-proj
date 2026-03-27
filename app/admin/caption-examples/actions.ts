@@ -4,6 +4,7 @@ import { requireSuperadmin } from "@/lib/auth/requireSuperadmin";
 import { createSupabaseAdminClient } from "@/lib/supabase/admin";
 import { err, ok, toErrorMessage, friendlyDbError, type ActionResult } from "@/lib/admin/actionResult";
 import { revalidatePath } from "next/cache";
+import { insertAuditFields, updateAuditFields } from "@/lib/db/auditFields";
 
 const ALLOWED_TABLES = new Set([
   "caption_examples",
@@ -85,6 +86,8 @@ export async function createCaptionExample(formData: FormData): Promise<ActionRe
       }
     }
 
+    Object.assign(payload, insertAuditFields(res.profile.id));
+
     const admin = createSupabaseAdminClient();
     const { error } = await admin.from(table).insert(payload);
     if (error) return err(friendlyDbError(error.message));
@@ -133,8 +136,7 @@ export async function updateCaptionExample(formData: FormData): Promise<ActionRe
       }
     }
 
-    // Keep audit timestamp server-driven (table has `modified_datetime_utc`).
-    patch.modified_datetime_utc = new Date().toISOString();
+    Object.assign(patch, updateAuditFields(res.profile.id));
 
     const admin = createSupabaseAdminClient();
     const { error } = await admin.from(table).update(patch).eq("id", id);

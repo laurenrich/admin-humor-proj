@@ -19,6 +19,10 @@ export default function LoginForm() {
     setLoading(true);
 
     const callbackUrl = new URL("/auth/callback", window.location.origin);
+    const next = searchParams.get("next");
+    if (next && next.startsWith("/admin") && !next.startsWith("//")) {
+      callbackUrl.searchParams.set("next", next);
+    }
 
     const { error } = await supabase.auth.signInWithOAuth({
       provider: "google",

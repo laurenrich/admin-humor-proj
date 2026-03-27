@@ -4,6 +4,7 @@ import { requireSuperadmin } from "@/lib/auth/requireSuperadmin";
 import { createSupabaseAdminClient } from "@/lib/supabase/admin";
 import { err, ok, toErrorMessage, friendlyDbError, type ActionResult } from "@/lib/admin/actionResult";
 import { revalidatePath } from "next/cache";
+import { insertAuditFields, updateAuditFields } from "@/lib/db/auditFields";
 
 export type ImageRow = {
   id: string;
@@ -148,6 +149,7 @@ export async function createImage(formData: FormData): Promise<ActionResult> {
       is_public,
       is_common_use,
       profile_id: res.profile.id,
+      ...insertAuditFields(res.profile.id),
     });
 
     if (error) return err(friendlyDbError(error.message));
@@ -179,6 +181,8 @@ export async function updateImage(formData: FormData): Promise<ActionResult> {
     if (formData.has("is_public")) patch.is_public = toBool(formData.get("is_public"));
     if (formData.has("is_common_use"))
       patch.is_common_use = toBool(formData.get("is_common_use"));
+
+    Object.assign(patch, updateAuditFields(res.profile.id));
 
     const admin = createSupabaseAdminClient();
     const { error } = await admin.from("images").update(patch).eq("id", id);

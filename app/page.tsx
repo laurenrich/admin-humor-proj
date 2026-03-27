@@ -6,15 +6,16 @@ function first(v: string | string[] | undefined) {
   return undefined;
 }
 
-export default function Home({
+export default async function Home({
   searchParams,
 }: {
-  searchParams?: Record<string, string | string[] | undefined>;
+  searchParams?: Promise<Record<string, string | string[] | undefined>>;
 }) {
-  const code = first(searchParams?.code);
-  const error = first(searchParams?.error);
-  const error_description = first(searchParams?.error_description);
-  const next = first(searchParams?.next);
+  const sp = (await searchParams) ?? {};
+  const code = first(sp.code);
+  const error = first(sp.error);
+  const error_description = first(sp.error_description);
+  const next = first(sp.next);
 
   // If Supabase redirects to "/" with OAuth params, forward them to our callback handler.
   if (code || error || error_description) {

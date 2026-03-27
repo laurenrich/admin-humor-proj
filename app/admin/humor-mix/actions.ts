@@ -4,6 +4,7 @@ import { requireSuperadmin } from "@/lib/auth/requireSuperadmin";
 import { createSupabaseAdminClient } from "@/lib/supabase/admin";
 import { err, ok, toErrorMessage, friendlyDbError, type ActionResult } from "@/lib/admin/actionResult";
 import { revalidatePath } from "next/cache";
+import { updateAuditFields } from "@/lib/db/auditFields";
 
 const ALLOWED_TABLES = new Set([
   "humor_flavor_mix",
@@ -46,6 +47,8 @@ export async function updateHumorMixRow(formData: FormData): Promise<ActionResul
       if (k === "table" || k === "id") continue;
       if (k === "created_at" || k === "created_datetime_utc") continue;
       if (k === "updated_at" || k === "updated_datetime_utc") continue;
+      if (k === "modified_datetime_utc") continue;
+      if (k === "created_by_user_id" || k === "modified_by_user_id") continue;
 
       if (typeof v === "string") {
         const parsed = parseScalar(v);
@@ -54,6 +57,8 @@ export async function updateHumorMixRow(formData: FormData): Promise<ActionResul
     }
 
     if (Object.keys(patch).length === 0) return ok();
+
+    Object.assign(patch, updateAuditFields(res.profile.id));
 
     const admin = createSupabaseAdminClient();
     const { error } = await admin.from(table).update(patch).eq("id", id);

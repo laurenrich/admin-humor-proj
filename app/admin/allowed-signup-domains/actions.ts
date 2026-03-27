@@ -4,6 +4,7 @@ import { requireSuperadmin } from "@/lib/auth/requireSuperadmin";
 import { createSupabaseAdminClient } from "@/lib/supabase/admin";
 import { err, ok, toErrorMessage, friendlyDbError, type ActionResult } from "@/lib/admin/actionResult";
 import { revalidatePath } from "next/cache";
+import { insertAuditFields, updateAuditFields } from "@/lib/db/auditFields";
 
 const ALLOWED_TABLES = new Set([
   "allowed_signup_domains",
@@ -61,6 +62,8 @@ export async function createAllowedSignupDomain(formData: FormData): Promise<Act
 
     if (Object.keys(payload).length === 0) return err("Provide at least one field");
 
+    Object.assign(payload, insertAuditFields(res.profile.id));
+
     const admin = createSupabaseAdminClient();
     const { error } = await admin.from(table).insert(payload);
     if (error) return err(friendlyDbError(error.message));
@@ -91,6 +94,8 @@ export async function updateAllowedSignupDomain(formData: FormData): Promise<Act
     }
 
     if (Object.keys(patch).length === 0) return ok();
+
+    Object.assign(patch, updateAuditFields(res.profile.id));
 
     const admin = createSupabaseAdminClient();
     const { error } = await admin.from(table).update(patch).eq("id", id);

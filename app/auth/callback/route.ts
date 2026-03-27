@@ -5,7 +5,15 @@ import { NextRequest, NextResponse } from "next/server";
 export async function GET(request: NextRequest) {
   const url = new URL(request.url);
   const code = url.searchParams.get("code");
-  const next = "/admin";
+  const nextParam = url.searchParams.get("next");
+  /** Only allow same-origin relative paths under /admin */
+  const next =
+    nextParam &&
+    nextParam.startsWith("/") &&
+    !nextParam.startsWith("//") &&
+    nextParam.startsWith("/admin")
+      ? nextParam
+      : "/admin";
 
   const error = url.searchParams.get("error");
   const errorDescription = url.searchParams.get("error_description");
@@ -80,7 +88,7 @@ export async function GET(request: NextRequest) {
     return redirectRes;
   }
 
-  const redirectRes = NextResponse.redirect(new URL(next, url.origin));
+  const redirectRes = NextResponse.redirect(new URL(next, url.origin).toString());
   for (const c of response.cookies.getAll()) {
     redirectRes.cookies.set(c.name, c.value);
   }
