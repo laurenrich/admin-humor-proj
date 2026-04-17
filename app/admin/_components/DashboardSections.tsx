@@ -63,16 +63,16 @@ export function TopCaptionsList({ rows }: { rows: LeaderRow[] }) {
   return (
     <div className="flex h-full flex-col rounded-2xl border border-zinc-200/90 bg-white p-5 shadow-sm dark:border-zinc-900 dark:bg-zinc-950">
       <h2 className="text-base font-semibold tracking-tight text-zinc-900 dark:text-zinc-50">
-        Top captions by likes
+        Most liked captions
       </h2>
-      <p className="mt-0.5 text-xs text-zinc-500 dark:text-zinc-400">Highest like counts</p>
+      <p className="mt-0.5 text-xs text-zinc-500 dark:text-zinc-400">Top five by like count</p>
 
       {rows.length === 0 ? (
         <p className="mt-6 text-sm text-zinc-500 dark:text-zinc-400">No captions yet.</p>
       ) : (
         <ol className="mt-4 flex flex-1 flex-col gap-4">
           {rows.map((c, idx) => {
-            const content = (c.content ?? "").trim();
+            const content = (c.content ?? "").replace(/\s+/g, " ").trim();
             const preview =
               content.length > 140 ? `${content.slice(0, 140)}…` : content || "(empty)";
             const likes = Number(c.like_count ?? 0);
